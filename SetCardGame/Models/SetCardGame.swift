@@ -26,10 +26,10 @@ struct SetCardGame {
             }
         }
 
-        for _ in 0..<12 {
-            let cardIndex = Int.random(in: 0..<deck.count)
-            cardsOnScreen.append(deck.remove(at: cardIndex))
-        }
+        deck.shuffle()
+
+        cardsOnScreen.append(contentsOf: deck[..<12])
+        deck.removeSubrange(..<12)
     }
 
     func cardIndices(of state: Card.State) -> [Int] {
@@ -75,14 +75,23 @@ struct SetCardGame {
         return colorIsSet && numberIsSet && shadingIsSet && shapeIsSet
     }
 
-    mutating func dealThreeMoreCards() {
-        for _ in 0..<min(3, deck.count) {
-            let cardIndex = Int.random(in: 0..<deck.count)
-            cardsOnScreen.append(deck.remove(at: cardIndex))
+    mutating func dealThreeMoreCards(replaceWith cardIndices: IndexSet? = nil) {
+        guard deck.count != 0 else { return }
+
+        if let cardIndices {
+            for index in cardIndices {
+                cardsOnScreen.insert(deck.removeFirst(), at: index)
+            }
+        } else {
+            cardsOnScreen.append(contentsOf: deck[0..<3])
+            deck.removeSubrange(0..<3)
         }
     }
 
-    mutating func removeMatchedCards() {
-        cardsOnScreen.remove(atOffsets: IndexSet(cardIndices(of: .matched)))
+    mutating func removeMatchedCards() -> IndexSet? {
+        let cardIndices = IndexSet(cardIndices(of: .matched))
+        cardsOnScreen.remove(atOffsets: cardIndices)
+
+        return cardIndices.isEmpty ? nil : cardIndices
     }
 }

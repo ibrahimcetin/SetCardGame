@@ -34,9 +34,9 @@ class SetViewModel: ObservableObject {
 
     func dealThreeMoreCards() {
         withAnimation {
-            model.removeMatchedCards()
+            let removedCardIndices = model.removeMatchedCards()
 
-            model.dealThreeMoreCards()
+            model.dealThreeMoreCards(replaceWith: removedCardIndices)
         }
     }
 
