@@ -19,7 +19,13 @@ class SetViewModel: ObservableObject {
     }
 
     var dealMoreCardsDisabled: Bool {
-        model.deck.count == 0
+        if model.deck.count == 0 && model.cardIndices(of: .matched).count != 0 {
+            return false
+        } else if model.deck.count == 0 {
+            return true
+        } else {
+            return false
+        }
     }
 
     func choose(_ card: Card) {

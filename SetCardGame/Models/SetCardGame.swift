@@ -32,7 +32,7 @@ struct SetCardGame {
         }
     }
 
-    private func cardIndices(of state: Card.State) -> [Int] {
+    func cardIndices(of state: Card.State) -> [Int] {
         cardsOnScreen
             .filter { $0.state == state }
             .map { cardsOnScreen.firstIndex(of: $0)! }
@@ -62,13 +62,15 @@ struct SetCardGame {
     }
 
     private func makeASet(_ cards: [Card]) -> Bool {
-        var cards = cards
-        let pioneer = cards.remove(at: 0)
+        let colorComparison = cards.allCompare(\.color)
+        let numberComparison = cards.allCompare(\.number)
+        let shadingComparison = cards.allCompare(\.shading)
+        let shapeComparison = cards.allCompare(\.shape)
 
-        let colorIsSet = (cards.allSatisfy { $0.color == pioneer.color } || cards.allSatisfy { $0.color != pioneer.color })
-        let numberIsSet = (cards.allSatisfy { $0.number == pioneer.number } || cards.allSatisfy { $0.number != pioneer.number })
-        let shadingIsSet = (cards.allSatisfy { $0.shading == pioneer.shading } || cards.allSatisfy { $0.shading != pioneer.shading })
-        let shapeIsSet = (cards.allSatisfy { $0.shape == pioneer.shape } || cards.allSatisfy { $0.shape != pioneer.shape })
+        let colorIsSet = colorComparison == .allSame || colorComparison == .allDifferent
+        let numberIsSet = numberComparison == .allSame || numberComparison == .allDifferent
+        let shadingIsSet = shadingComparison == .allSame || shadingComparison == .allDifferent
+        let shapeIsSet = shapeComparison == .allSame || shapeComparison == .allDifferent
 
         return colorIsSet && numberIsSet && shadingIsSet && shapeIsSet
     }
