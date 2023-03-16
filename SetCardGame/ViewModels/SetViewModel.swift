@@ -28,9 +28,9 @@ class SetViewModel: ObservableObject {
 
     func dealThreeMoreCards() {
         withAnimation {
-            model.dealThreeMoreCards()
-
             model.removeMatchedCards()
+
+            model.dealThreeMoreCards()
         }
     }
 
