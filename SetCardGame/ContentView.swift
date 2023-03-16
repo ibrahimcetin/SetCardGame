@@ -33,6 +33,7 @@ struct ContentView: View {
                         Image(systemName: DC.dealMoreCardsImage)
                             .font(.title)
                     }
+                    .disabled(game.dealMoreCardsDisabled)
                 }
                 .padding()
             }
