@@ -13,6 +13,8 @@ struct SetCardGame {
 
     private(set) var score = 0
 
+    private(set) var isCheatModeOn = false
+
     init() {
         var id = 1
         for color in Card.Color.allCases {
@@ -49,10 +51,10 @@ struct SetCardGame {
             let allSet = makeASet(selectedCards)
 
             for index in cardIndices(of: .selected) {
-                cardsOnScreen[index].state = allSet ? .matched : .unmatched
+                cardsOnScreen[index].state = allSet || isCheatModeOn ? .matched : .unmatched
             }
 
-            score += allSet ? +1 : -1
+            score += allSet || isCheatModeOn ? +1 : -1
 
         } else if cardIndices(of: .unmatched).count > 0 {
             for index in cardIndices(of: .unmatched) {
@@ -93,5 +95,9 @@ struct SetCardGame {
         cardsOnScreen.remove(atOffsets: cardIndices)
 
         return cardIndices.isEmpty ? nil : cardIndices
+    }
+
+    mutating func toggleCheatMode() {
+        isCheatModeOn.toggle()
     }
 }

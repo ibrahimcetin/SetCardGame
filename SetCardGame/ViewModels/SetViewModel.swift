@@ -28,6 +28,17 @@ class SetViewModel: ObservableObject {
         }
     }
 
+    var isCheatModeOn: Bool {
+        model.isCheatModeOn
+    }
+
+
+    func newGame() {
+        model = SetCardGame()
+    }
+
+    // MARK: Intents
+
     func choose(_ card: Card) {
         model.choose(card)
     }
@@ -40,7 +51,8 @@ class SetViewModel: ObservableObject {
         }
     }
 
-    func newGame() {
-        model = SetCardGame()
+    func toggleCheatMode() {
+        model.toggleCheatMode()
     }
+
 }

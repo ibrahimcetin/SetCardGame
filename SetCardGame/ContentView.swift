@@ -39,8 +39,16 @@ struct ContentView: View {
             }
             .navigationTitle("Set")
             .toolbar {
-                Button("New Game") {
-                    game.newGame()
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(game.isCheatModeOn ? "Turn off cheats" : "Turn on cheats") {
+                        game.toggleCheatMode()
+                    }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("New Game") {
+                        game.newGame()
+                    }
                 }
             }
         }
