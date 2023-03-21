@@ -41,7 +41,7 @@ struct CardView: View {
         } else if card.state == .unmatched {
             return DC.unmatchedBackgroundColor
         } else if card.state == .matched {
-            return DC.matchedBackgroundColor
+            return nil
         } else {
             return nil
         }

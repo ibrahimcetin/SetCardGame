@@ -10,8 +10,16 @@ import SwiftUI
 class SetViewModel: ObservableObject {
     @Published private var model = SetCardGame()
 
+    var deck: [Card] {
+        model.deck
+    }
+
     var cardsOnScreen: [Card] {
         model.cardsOnScreen
+    }
+
+    var discardPile: [Card] {
+        model.discardPile
     }
 
     var score: Int {
@@ -43,12 +51,14 @@ class SetViewModel: ObservableObject {
         model.choose(card)
     }
 
-    func dealThreeMoreCards() {
-        withAnimation {
-            let removedCardIndices = model.removeMatchedCards()
+    func deal(card: Card) {
+        model.deal(card: card)
+    }
 
-            model.dealThreeMoreCards(replaceWith: removedCardIndices)
-        }
+    func dealThreeMoreCards() {
+        let removedCardIndices = model.removeMatchedCards()
+
+        model.dealThreeMoreCards(replaceWith: removedCardIndices)
     }
 
     func toggleCheatMode() {

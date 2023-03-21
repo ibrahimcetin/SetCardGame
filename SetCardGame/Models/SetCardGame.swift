@@ -10,6 +10,7 @@ import Foundation
 struct SetCardGame {
     private(set) var deck: [Card] = []
     private(set) var cardsOnScreen: [Card] = []
+    private(set) var discardPile: [Card] = []
 
     private(set) var score = 0
 
@@ -51,10 +52,21 @@ struct SetCardGame {
             let allSet = makeASet(selectedCards)
 
             for index in cardIndices(of: .selected) {
-                cardsOnScreen[index].state = allSet || isCheatModeOn ? .matched : .unmatched
+                if allSet || isCheatModeOn {
+                    cardsOnScreen[index].state = .matched
+                } else {
+                    cardsOnScreen[index].state = .unmatched
+                }
             }
 
-            score += allSet || isCheatModeOn ? +1 : -1
+            if allSet || isCheatModeOn {
+                score += 1
+
+                let removedCardIndices = removeMatchedCards()
+                dealThreeMoreCards(replaceWith: removedCardIndices)
+            } else {
+                score -= 1
+            }
 
         } else if cardIndices(of: .unmatched).count > 0 {
             for index in cardIndices(of: .unmatched) {
@@ -77,6 +89,11 @@ struct SetCardGame {
         return colorIsSet && numberIsSet && shadingIsSet && shapeIsSet
     }
 
+    mutating func deal(card: Card) {
+        cardsOnScreen.append(card)
+        deck.removeAll { $0 == card }
+    }
+
     mutating func dealThreeMoreCards(replaceWith cardIndices: IndexSet? = nil) {
         guard deck.count != 0 else { return }
 
@@ -92,6 +109,11 @@ struct SetCardGame {
 
     mutating func removeMatchedCards() -> IndexSet? {
         let cardIndices = IndexSet(cardIndices(of: .matched))
+
+        for index in cardIndices {
+            discardPile.append(cardsOnScreen[index])
+        }
+
         cardsOnScreen.remove(atOffsets: cardIndices)
 
         return cardIndices.isEmpty ? nil : cardIndices
