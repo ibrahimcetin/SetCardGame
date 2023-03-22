@@ -44,7 +44,10 @@ struct ContentView: View {
     var gameBody: some View {
         AspectVGrid(items: game.cardsOnScreen, aspectRatio: DC.aspectRatio) { card in
             CardView(card: card, aspectRatio: DC.aspectRatio)
-                .animation(nil, value: card.state) // do not animate state changes of card
+                .rotation3DEffect(.degrees(card.state == .matched ? 360 : 0), axis: (0, 1, 0))
+                .animation(.linear, value: card.state == .matched) // matched animation
+                .offset(y: card.state == .unmatched ? -5 : 0)
+                .animation(card.state == .unmatched ? .default.repeatCount(3).speed(1.25) : nil, value: card.state) // unmatched animation
                 .cardify(isFaceUp: !game.deck.contains(card))
                 .matchedGeometryEffect(id: card.id, in: gameNamespace)
                 .transition(.asymmetric(insertion: .identity, removal: .identity))
