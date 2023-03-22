@@ -1,5 +1,5 @@
 //
-//  SetViewModel.swift
+//  SetCardGameViewModel.swift
 //  SetCardGame
 //
 //  Created by İbrahim Çetin on 14.03.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class SetViewModel: ObservableObject {
+class SetCardGameViewModel: ObservableObject {
     @Published private var model = SetCardGame()
 
     var deck: [Card] {

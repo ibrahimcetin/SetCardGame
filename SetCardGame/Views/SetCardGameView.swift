@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  SetCardGameView.swift
 //  SetCardGame
 //
 //  Created by İbrahim Çetin on 15.03.2023.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct SetCardGameView: View {
     @ObservedObject var game: SetViewModel
 
     @Namespace private var gameNamespace
@@ -126,7 +126,7 @@ struct ContentView: View {
     }
 }
 
-extension ContentView {
+extension SetCardGameView {
     private typealias DC = DrawingConstants
 
     struct DrawingConstants {
@@ -139,7 +139,7 @@ extension ContentView {
     }
 }
 
-extension ContentView {
+extension SetCardGameView {
     struct CardConstants {
         static let aspectRatio: CGFloat = 2/3
         static let height: CGFloat = 90
@@ -149,6 +149,6 @@ extension ContentView {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(game: SetViewModel())
+        SetCardGameView(game: SetViewModel())
     }
 }

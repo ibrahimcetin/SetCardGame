@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct SetCardGameApp: App {
-    @StateObject var game = SetViewModel()
+    @StateObject var game = SetCardGameViewModel()
 
     var body: some Scene {
         WindowGroup {
-            ContentView(game: game)
+            SetCardGameView(game: game)
         }
     }
 }

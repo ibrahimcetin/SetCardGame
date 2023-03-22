@@ -10,7 +10,7 @@ import XCTest
 
 final class SetViewModelTests: XCTestCase {
     func testScore() {
-        let viewModel = SetViewModel()
+        let viewModel = SetCardGameViewModel()
 
         for index in 0..<3 {
             viewModel.choose(viewModel.cardsOnScreen[index])
@@ -20,7 +20,7 @@ final class SetViewModelTests: XCTestCase {
     }
 
     func testChoose() throws {
-        let viewModel = SetViewModel()
+        let viewModel = SetCardGameViewModel()
 
         var card = try XCTUnwrap(viewModel.cardsOnScreen.randomElement())
         viewModel.choose(card)
@@ -32,7 +32,7 @@ final class SetViewModelTests: XCTestCase {
     }
 
     func testDealThreeMoreCards() throws {
-        let viewModel = SetViewModel()
+        let viewModel = SetCardGameViewModel()
 
         viewModel.dealThreeMoreCards()
 
@@ -40,7 +40,7 @@ final class SetViewModelTests: XCTestCase {
     }
 
     func testNewGame() {
-        let viewModel = SetViewModel()
+        let viewModel = SetCardGameViewModel()
 
         let currentGameCards = viewModel.cardsOnScreen
 
