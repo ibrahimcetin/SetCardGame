@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F0EA37D29C8256700EE2BC0 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0EA37C29C8256700EE2BC0 /* Cardify.swift */; };
 		0FC8431529C361A7004C9797 /* Array+allCompare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC8431429C361A7004C9797 /* Array+allCompare.swift */; };
 		0FD780F629C1F5E300425B1E /* SetCardGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD780F529C1F5E300425B1E /* SetCardGameApp.swift */; };
 		0FD780F829C1F5E300425B1E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FD780F729C1F5E300425B1E /* ContentView.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0F0EA37C29C8256700EE2BC0 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
 		0FC8431429C361A7004C9797 /* Array+allCompare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+allCompare.swift"; sourceTree = "<group>"; };
 		0FD780F229C1F5E300425B1E /* SetCardGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetCardGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FD780F529C1F5E300425B1E /* SetCardGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCardGameApp.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				0FD7810629C1F6BA00425B1E /* AspectVGrid.swift */,
 				0FD7810829C1F6CA00425B1E /* CardView.swift */,
 				0FD7810A29C1F6D900425B1E /* Diamond.swift */,
+				0F0EA37C29C8256700EE2BC0 /* Cardify.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				0FD7811129C1F71D00425B1E /* SetCardGame.swift in Sources */,
 				0FD7810D29C1F6F800425B1E /* SetViewModel.swift in Sources */,
 				0FD7810B29C1F6D900425B1E /* Diamond.swift in Sources */,
+				0F0EA37D29C8256700EE2BC0 /* Cardify.swift in Sources */,
 				0FD7810729C1F6BA00425B1E /* AspectVGrid.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

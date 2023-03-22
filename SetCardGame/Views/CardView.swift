@@ -36,13 +36,14 @@ struct CardView: View {
     }
 
     private var cardBackgroundColor: Color? {
-        if card.state == .selected {
+        switch card.state {
+        case .selected:
             return DC.selectedBackgroundColor
-        } else if card.state == .unmatched {
+        case .unmatched:
             return DC.unmatchedBackgroundColor
-        } else if card.state == .matched {
+        case .matched:
             return DC.matchedBackgroundColor
-        } else {
+        default:
             return nil
         }
     }

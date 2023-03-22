@@ -10,6 +10,15 @@ import Foundation
 struct SetCardGame {
     private(set) var deck: [Card] = []
     private(set) var cardsOnScreen: [Card] = []
+    private(set) var discardPile: [Card] = [] {
+        didSet {
+            discardPile = discardPile.map {
+                var card = $0
+                card.state = .unselected
+                return card
+            }
+        }
+    }
 
     private(set) var score = 0
 
@@ -34,36 +43,77 @@ struct SetCardGame {
         deck.removeSubrange(..<12)
     }
 
+    /// Returns the card indices in `cardsOnScreen` that have the given `state`.
     func cardIndices(of state: Card.State) -> [Int] {
         cardsOnScreen
             .filter { $0.state == state }
             .map { cardsOnScreen.firstIndex(of: $0)! }
     }
 
+    /// Toggles given `card`'s state as selected or unselected.
     mutating func choose(_ card: Card) {
-        let selectedCardIndex = cardsOnScreen.firstIndex(of: card)
-        guard let selectedCardIndex else { return }
+        guard let selectedCardIndex = cardsOnScreen.firstIndex(of: card) else { return }
 
         cardsOnScreen[selectedCardIndex].state.toggle()
+    }
 
-        if cardIndices(of: .selected).count == 3 {
-            let selectedCards = cardIndices(of: .selected).map { cardsOnScreen[$0] }
-            let allSet = makeASet(selectedCards)
+    /// Check selected cards are matching or not.
+    /// And update score.
+    mutating func checkSelectedCards() {
+        let selectedCardIndices = cardIndices(of: .selected)
 
-            for index in cardIndices(of: .selected) {
-                cardsOnScreen[index].state = allSet || isCheatModeOn ? .matched : .unmatched
+        if selectedCardIndices.count == 3 {
+            let selectedCards = selectedCardIndices.map { cardsOnScreen[$0] }
+            let isValidSet = isSet(selectedCards) || isCheatModeOn
+
+            for index in selectedCardIndices {
+                if isValidSet {
+                    cardsOnScreen[index].state = .matched
+                } else {
+                    cardsOnScreen[index].state = .unmatched
+                }
             }
 
-            score += allSet || isCheatModeOn ? +1 : -1
+            score += isValidSet ? 1 : -1
+        }
+    }
 
-        } else if cardIndices(of: .unmatched).count > 0 {
-            for index in cardIndices(of: .unmatched) {
+    /// Unselects unmatched cards
+    mutating func unselectUnmatchedCards() {
+        let unmatchedCardIndices = cardIndices(of: .unmatched)
+
+        if unmatchedCardIndices.count > 0 {
+            for index in unmatchedCardIndices {
                 cardsOnScreen[index].state = .unselected
             }
         }
     }
 
-    private func makeASet(_ cards: [Card]) -> Bool {
+    /// Adds `card` to `cardsOnScreen` and removes it from `deck`
+    /// If `insertAt` parameter specified, Inserts new card to that index.
+    mutating func dealCard(insertAt index: Int? = nil) {
+        guard deck.count > 0 else { return }
+
+        let card = deck.removeFirst()
+
+        if let index, index < cardsOnScreen.count {
+            cardsOnScreen.insert(card, at: index)
+        } else {
+            cardsOnScreen.append(card)
+        }
+    }
+
+    /// Removes the card from `cardOnScreen` at the specified position.
+    /// And adds that card to `discardPile`
+    mutating func removeCard(at index: Int) {
+        guard index < cardsOnScreen.count else { return }
+
+        let card = cardsOnScreen.remove(at: index)
+        discardPile.append(card)
+    }
+
+    /// Checks whether the given `cards` make a set or not
+    func isSet(_ cards: [Card]) -> Bool {
         let colorComparison = cards.allCompare(\.color)
         let numberComparison = cards.allCompare(\.number)
         let shadingComparison = cards.allCompare(\.shading)
@@ -77,26 +127,7 @@ struct SetCardGame {
         return colorIsSet && numberIsSet && shadingIsSet && shapeIsSet
     }
 
-    mutating func dealThreeMoreCards(replaceWith cardIndices: IndexSet? = nil) {
-        guard deck.count != 0 else { return }
-
-        if let cardIndices {
-            for index in cardIndices {
-                cardsOnScreen.insert(deck.removeFirst(), at: index)
-            }
-        } else {
-            cardsOnScreen.append(contentsOf: deck[0..<3])
-            deck.removeSubrange(0..<3)
-        }
-    }
-
-    mutating func removeMatchedCards() -> IndexSet? {
-        let cardIndices = IndexSet(cardIndices(of: .matched))
-        cardsOnScreen.remove(atOffsets: cardIndices)
-
-        return cardIndices.isEmpty ? nil : cardIndices
-    }
-
+    /// Toggles cheat mode
     mutating func toggleCheatMode() {
         isCheatModeOn.toggle()
     }
