@@ -90,9 +90,9 @@ struct ContentView: View {
         .frame(width: CardConstants.width, height: CardConstants.height)
         .padding(.horizontal)
         .onTapGesture {
-            for (index, card) in game.deck[..<3].enumerated() {
+            for index in 0..<3 {
                 withAnimation(.linear.delay(Double(index) * DC.dealAnimationDelay)) {
-                    game.deal(card: card)
+                    game.dealCard()
                 }
             }
         }
