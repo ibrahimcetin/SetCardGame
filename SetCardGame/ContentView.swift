@@ -44,6 +44,7 @@ struct ContentView: View {
     var gameBody: some View {
         AspectVGrid(items: game.cardsOnScreen, aspectRatio: DC.aspectRatio) { card in
             CardView(card: card, aspectRatio: DC.aspectRatio)
+                .animation(nil, value: card.state) // do not animate state changes of card
                 .cardify(isFaceUp: !game.deck.contains(card))
                 .matchedGeometryEffect(id: card.id, in: gameNamespace)
                 .transition(.asymmetric(insertion: .identity, removal: .identity))
