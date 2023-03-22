@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SetCardGameView: View {
-    @ObservedObject var game: SetViewModel
+    @ObservedObject var game: SetCardGameViewModel
 
     @Namespace private var gameNamespace
 
@@ -149,6 +149,6 @@ extension SetCardGameView {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        SetCardGameView(game: SetViewModel())
+        SetCardGameView(game: SetCardGameViewModel())
     }
 }
