@@ -40,7 +40,6 @@ class SetCardGameViewModel: ObservableObject {
         model.isCheatModeOn
     }
 
-
     func newGame() {
         model = SetCardGame()
     }
@@ -63,10 +62,34 @@ class SetCardGameViewModel: ObservableObject {
         }
 
         // Unselect unmatched cards
-        model.unselectUnmatchedCards()
+        if model.cardIndices(of: .unmatched).count > 0 {
+            for index in model.cardIndices(of: .unmatched) {
+                model.updateCardState(at: index, with: .unselected)
+            }
+        }
 
         // Check selected cards are matching or not
-        model.checkSelectedCards()
+        let selectedCardIndices = model.cardIndices(of: .selected)
+
+        if selectedCardIndices.count == 3 {
+            let selectedCards = selectedCardIndices.map { cardsOnScreen[$0] }
+            let isValidSet = model.isSet(selectedCards) || isCheatModeOn
+
+            for index in selectedCardIndices {
+                // Unselect with no animation before changing the state of cards.
+                withAnimation(nil) {
+                    model.updateCardState(at: index, with: .unselected)
+                }
+
+                if isValidSet {
+                    model.updateCardState(at: index, with: .matched)
+                } else {
+                    model.updateCardState(at: index, with: .unmatched)
+                }
+            }
+
+            model.updateScore(with: isValidSet ? 1 : -1)
+        }
     }
 
     func dealCard(insertAt: Int? = nil) {
