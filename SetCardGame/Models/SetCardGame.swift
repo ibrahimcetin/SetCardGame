@@ -57,36 +57,16 @@ struct SetCardGame {
         cardsOnScreen[selectedCardIndex].state.toggle()
     }
 
-    /// Check selected cards are matching or not.
-    /// And update score.
-    mutating func checkSelectedCards() {
-        let selectedCardIndices = cardIndices(of: .selected)
+    /// Updates card state at given index with given state.
+    mutating func updateCardState(at index: Int, with state: Card.State) {
+        guard index < cardsOnScreen.count else { return }
 
-        if selectedCardIndices.count == 3 {
-            let selectedCards = selectedCardIndices.map { cardsOnScreen[$0] }
-            let isValidSet = isSet(selectedCards) || isCheatModeOn
-
-            for index in selectedCardIndices {
-                if isValidSet {
-                    cardsOnScreen[index].state = .matched
-                } else {
-                    cardsOnScreen[index].state = .unmatched
-                }
-            }
-
-            score += isValidSet ? 1 : -1
-        }
+        cardsOnScreen[index].state = state
     }
 
-    /// Unselects unmatched cards
-    mutating func unselectUnmatchedCards() {
-        let unmatchedCardIndices = cardIndices(of: .unmatched)
-
-        if unmatchedCardIndices.count > 0 {
-            for index in unmatchedCardIndices {
-                cardsOnScreen[index].state = .unselected
-            }
-        }
+    /// Updates `score` with given value.
+    mutating func updateScore(with value: Int) {
+        score += value
     }
 
     /// Adds `card` to `cardsOnScreen` and removes it from `deck`
