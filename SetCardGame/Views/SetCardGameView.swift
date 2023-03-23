@@ -53,9 +53,7 @@ struct SetCardGameView: View {
                 .transition(.asymmetric(insertion: .identity, removal: .identity))
                 .padding(DC.padding)
                 .onTapGesture {
-                    withAnimation {
-                        game.choose(card)
-                    }
+                    game.choose(card)
                 }
         }
     }
