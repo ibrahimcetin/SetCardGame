@@ -11,12 +11,14 @@ struct SetCardGame {
     private(set) var deck: [Card] = []
     private(set) var cardsOnScreen: [Card] = []
     private(set) var discardPile: [Card] = [] {
+        // Unselect appended card
         didSet {
-            discardPile = discardPile.map {
-                var card = $0
-                card.state = .unselected
-                return card
-            }
+            let endIndex = discardPile.endIndex - 1
+
+            var card = discardPile[endIndex]
+            card.state = .unselected
+
+            discardPile[endIndex] = card
         }
     }
 
@@ -43,11 +45,10 @@ struct SetCardGame {
         deck.removeSubrange(..<12)
     }
 
-    /// Returns the card indices in `cardsOnScreen` that have the given `state`.
-    func cardIndices(of state: Card.State) -> [Int] {
+    /// Returns the cards in `cardsOnScreen` that have the given `state`.
+    func cardsWhich(_ state: Card.State) -> [Card] {
         cardsOnScreen
             .filter { $0.state == state }
-            .map { cardsOnScreen.firstIndex(of: $0)! }
     }
 
     /// Toggles given `card`'s state as selected or unselected.
@@ -58,8 +59,8 @@ struct SetCardGame {
     }
 
     /// Updates card state at given index with given state.
-    mutating func updateCardState(at index: Int, with state: Card.State) {
-        guard index < cardsOnScreen.count else { return }
+    mutating func updateCardState(_ card: Card, with state: Card.State) {
+        guard let index = cardsOnScreen.firstIndex(of: card) else { return }
 
         cardsOnScreen[index].state = state
     }
@@ -85,11 +86,15 @@ struct SetCardGame {
 
     /// Removes the card from `cardOnScreen` at the specified position.
     /// And adds that card to `discardPile`
-    mutating func removeCard(at index: Int) {
-        guard index < cardsOnScreen.count else { return }
+    /// Returns index of the card
+    @discardableResult
+    mutating func removeCard(_ card: Card) -> Int? {
+        guard let index = cardsOnScreen.firstIndex(of: card) else { return nil }
 
         let card = cardsOnScreen.remove(at: index)
         discardPile.append(card)
+
+        return index
     }
 
     /// Checks whether the given `cards` make a set or not
