@@ -27,7 +27,7 @@ class SetCardGameViewModel: ObservableObject {
     }
 
     var dealMoreCardsDisabled: Bool {
-        if model.deck.count == 0 && model.cardIndices(of: .matched).count != 0 {
+        if model.deck.count == 0 && model.cardsWhich(.matched).count != 0 {
             return false
         } else if model.deck.count == 0 {
             return true
@@ -49,42 +49,39 @@ class SetCardGameViewModel: ObservableObject {
     func choose(_ card: Card) {
         model.choose(card)
 
-        // Remove selected cards and deal new cards
-        if model.cardIndices(of: .matched).count > 0 {
-            for (index, cardIndex) in model.cardIndices(of: .matched).enumerated() {
-                withAnimation(.linear.delay(Double(index) * 0.1)) {
-                    model.removeCard(at: cardIndex)
+        // Remove matched cards and deal new cards
+        let matchedCards = model.cardsWhich(.matched)
+
+        if matchedCards.count > 0 {
+            for (index, card) in matchedCards.enumerated() {
+                withAnimation(model.deck.count > 0 ? .linear.delay(Double(index) * 0.1) : .default) {
+                    let cardIndex = model.removeCard(card)
 
                     model.dealCard(insertAt: cardIndex)
                 }
-
             }
         }
 
         // Unselect unmatched cards
-        if model.cardIndices(of: .unmatched).count > 0 {
-            for index in model.cardIndices(of: .unmatched) {
-                model.updateCardState(at: index, with: .unselected)
+        let unmatchedCards = model.cardsWhich(.unmatched)
+
+        if unmatchedCards.count > 0 {
+            for card in unmatchedCards {
+                model.updateCardState(card, with: .unselected)
             }
         }
 
         // Check selected cards are matching or not
-        let selectedCardIndices = model.cardIndices(of: .selected)
+        let selectedCards = model.cardsWhich(.selected)
 
-        if selectedCardIndices.count == 3 {
-            let selectedCards = selectedCardIndices.map { cardsOnScreen[$0] }
+        if selectedCards.count == 3 {
             let isValidSet = model.isSet(selectedCards) || isCheatModeOn
 
-            for index in selectedCardIndices {
-                // Unselect with no animation before changing the state of cards.
-                withAnimation(nil) {
-                    model.updateCardState(at: index, with: .unselected)
-                }
-
+            for card in selectedCards {
                 if isValidSet {
-                    model.updateCardState(at: index, with: .matched)
+                    model.updateCardState(card, with: .matched)
                 } else {
-                    model.updateCardState(at: index, with: .unmatched)
+                    model.updateCardState(card, with: .unmatched)
                 }
             }
 

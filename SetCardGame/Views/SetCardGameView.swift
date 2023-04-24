@@ -25,6 +25,7 @@ struct SetCardGameView: View {
                     discardPile
 
                     deck
+                        .animation(nil, value: game.deck)
                 }
                 .padding()
             }
