@@ -72,4 +72,21 @@ final class SetCardGameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.score, 0)
         XCTAssertEqual(viewModel.isCheatModeOn, false)
     }
+
+    func testDiscardPile() {
+        viewModel.toggleCheatMode()
+
+        XCTAssertTrue(viewModel.isCheatModeOn)
+
+        for index in 0..<3 {
+            viewModel.choose(viewModel.cardsOnScreen[index])
+        }
+        viewModel.choose(viewModel.cardsOnScreen[0])
+
+        XCTAssertEqual(viewModel.discardPile.count, 3)
+
+        for card in viewModel.discardPile {
+            XCTAssertEqual(card.state, .unselected)
+        }
+    }
 }
